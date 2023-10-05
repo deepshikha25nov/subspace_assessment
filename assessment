@@ -10,6 +10,9 @@ BASE_URL = "https://intent-kit-16.hasura.app/api/rest/blogs"
 HEADERS = {
   "x-hasura-admin-secret": "32qR4KmXOIpsGPQKMqEJHGJS27G5s7HdSKO3gdtQd2kv5e852SiYwWNfxkZOBuQ6"
 }
+
+
+
 # 1. Data Fetching:
 # Make a GET request to the Hasura API to fetch the blog data.
 response = requests.get(BASE_URL, headers=HEADERS)
@@ -20,6 +23,9 @@ if response.status_code == 200:
 else:
   # Raise an error if the request failed.
   raise Exception("Error fetching blog data: {}".format(response.status_code))
+
+
+
 # 2. Data Analysis:
 # Convert the blog data into a Pandas DataFrame for easy analysis.
 df = pd.DataFrame(blogs)
@@ -31,6 +37,9 @@ longest_title = df["title"].max()
 num_privacy_blogs = df["title"].str.contains("privacy").sum()
 # Create an array of unique blog titles (no duplicates).
 unique_titles = df["title"].unique()
+
+
+
 # 3. Response:
 # Create a JSON object containing the requested statistics.
 response_data = {
@@ -41,5 +50,8 @@ response_data = {
 }
 # Respond to the client with the JSON object.
 return json.dumps(response_data)
+
+
+
 # 4. Blog Search Endpoint:
 # Create an additional route at `/api/
