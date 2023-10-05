@@ -1,0 +1,45 @@
+# Import the necessary libraries.
+import requests
+import json
+import pandas as pd
+import numpy as np
+import lodash as _
+# Define the base URL for the Hasura API.
+BASE_URL = "https://intent-kit-16.hasura.app/api/rest/blogs"
+# Define the headers for the Hasura API.
+HEADERS = {
+  "x-hasura-admin-secret": "32qR4KmXOIpsGPQKMqEJHGJS27G5s7HdSKO3gdtQd2kv5e852SiYwWNfxkZOBuQ6"
+}
+# 1. Data Fetching:
+# Make a GET request to the Hasura API to fetch the blog data.
+response = requests.get(BASE_URL, headers=HEADERS)
+# Check the status code of the response.
+if response.status_code == 200:
+  # Parse the JSON response into a Python dictionary.
+  blogs = json.loads(response.content)
+else:
+  # Raise an error if the request failed.
+  raise Exception("Error fetching blog data: {}".format(response.status_code))
+# 2. Data Analysis:
+# Convert the blog data into a Pandas DataFrame for easy analysis.
+df = pd.DataFrame(blogs)
+# Calculate the total number of blogs fetched.
+total_blogs = df.shape[0]
+# Find the blog with the longest title.
+longest_title = df["title"].max()
+# Determine the number of blogs with titles containing the word "privacy."
+num_privacy_blogs = df["title"].str.contains("privacy").sum()
+# Create an array of unique blog titles (no duplicates).
+unique_titles = df["title"].unique()
+# 3. Response:
+# Create a JSON object containing the requested statistics.
+response_data = {
+  "total_blogs": total_blogs,
+  "longest_title": longest_title,
+  "num_privacy_blogs": num_privacy_blogs,
+  "unique_titles": unique_titles.tolist()
+}
+# Respond to the client with the JSON object.
+return json.dumps(response_data)
+# 4. Blog Search Endpoint:
+# Create an additional route at `/api/
